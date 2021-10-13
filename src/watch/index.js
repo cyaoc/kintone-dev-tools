@@ -44,6 +44,7 @@ module.exports = class Watcher {
       .on('change', (file) => {
         const fpath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file)
         if (this.db.change(fpath)) {
+          logger.info(`文件:${file}已变更`)
           if (this.config.isConfig(fpath)) {
             logger.info('重载配置文件中。。。。。')
             this.config.reload()
@@ -54,6 +55,7 @@ module.exports = class Watcher {
         }
       })
       .on('unlink', async (file) => {
+        logger.info(`文件:${file}已被删除`)
         const fpath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file)
         this.db.remove(fpath)
       })
