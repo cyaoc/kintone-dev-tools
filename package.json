@@ -5,6 +5,10 @@
   "bin": {
     "kintone-dev-tools": "./src/bin/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyaoc/kintone-dev-tools"
+  },
   "keywords": [
     "kintone",
     "devtools",
