@@ -63,11 +63,10 @@ module.exports = class Config {
     })
   }
 
-  convert(file, isDir = false) {
-    if (file === this.dir) return undefined
-    const dir = path.dirname(file)
-    const value = isDir ? this.map.get(dir) : this.map.get(file) || this.map.get(dir)
+  convert(file) {
+    const value = this.map.get(file)
     if (value) return value
-    return this.convert(dir, true)
+    if (file === this.dir) return undefined
+    return this.convert(path.dirname(file))
   }
 }

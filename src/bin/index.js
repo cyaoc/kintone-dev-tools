@@ -9,8 +9,8 @@ program.version(pkg.version, '-v, --version').description(pkg.description)
 program
   .command('cert')
   .description('生成开发用的服务器证书')
-  .option('-i, --install')
-  .option('-u, --uninstall')
+  .option('-i, --install', '安装CA证书')
+  .option('-u, --uninstall', '卸载CA证书')
   .action((options) => {
     if (options.install) {
       cert.install()
@@ -19,8 +19,11 @@ program
 program
   .command('serve <source>')
   .description('启动静态资源服务器')
-  .action((source) => {
-    server.start(source)
+  .option('-p, --port <port>', '启动端口', 443)
+  .action((source, options) => {
+    if (!options.port || !/^\d+$/.test(options.port)) throw new Error('你输入了错误的端口号')
+    const option = { static: source, port: options.port }
+    server.start(option)
   })
 program
   .command('watch <source>')

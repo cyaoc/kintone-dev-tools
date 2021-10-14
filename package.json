@@ -2,6 +2,7 @@
   "name": "kintone-dev-tools",
   "version": "1.0.1",
   "description": "development tools for kintone",
+  "main": "./src/index.js",
   "bin": {
     "kintone-dev-tools": "./src/bin/index.js"
   },
@@ -30,7 +31,7 @@
     "fast-glob": "^3.2.7",
     "form-data": "^4.0.0",
     "fs-extra": "^10.0.0",
-    "hosts-so-easy": "^1.2.9",
+    "ip": "^1.1.5",
     "node-forge": "^0.10.0",
     "node-rsa": "^1.1.1",
     "serve-index": "^1.9.1"
