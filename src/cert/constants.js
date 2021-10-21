@@ -1,6 +1,6 @@
 const applicationConfigPath = require('application-config-path')
 const path = require('path')
-const pkg = require('../pkg')
+const pkg = require('../../package.json')
 
 const ca = 'root.crt'
 const caKey = 'root.key'

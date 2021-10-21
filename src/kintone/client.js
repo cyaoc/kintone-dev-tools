@@ -16,7 +16,7 @@ const getFileKeys = (template, key) => {
   return template.get(key).fileKeys
 }
 
-const getHost = (str) => {
+const host = (str) => {
   if (/https?:\/\//gi.test(str)) {
     return new URL(str).host
   }
@@ -26,7 +26,7 @@ const getHost = (str) => {
 module.exports = class Client {
   constructor(env) {
     this.instance = axios.create({
-      baseURL: `https://${getHost(env.host)}`,
+      baseURL: `https://${host(env.host)}`,
       timeout: 10000,
       headers: {
         'X-Cybozu-Authorization': Buffer.from(`${env.username}:${env.password}`).toString('base64'),
