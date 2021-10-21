@@ -6,7 +6,7 @@ const { certificateFor } = require('../cert')
 const logger = require('../logger')
 
 module.exports.start = (option) => {
-  logger.info('正在配置开发者证书')
+  logger.info('Configuring developer certificate...')
   const myip = ip.address()
   const cert = certificateFor(myip)
   const app = express()
@@ -19,8 +19,8 @@ module.exports.start = (option) => {
     app,
   )
   httpsServer.listen(option.port ? option.port : 443)
-  logger.info('服务器已经启动,你可以通过以下链接来访问:')
+  logger.info('The server has been started, you can access it through the following link:')
   const port = !option.port || option.port === 443 ? '' : `:${option.port}`
-  logger.info(`本地 -> https://localhost${port}/`)
-  logger.info(`局域网 -> https://${myip}${port}/`)
+  logger.info(`Local -> https://localhost${port}/`)
+  logger.info(`Network -> https://${myip}${port}/`)
 }

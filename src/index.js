@@ -1,5 +1,5 @@
 exports.cert = require('./cert')
-exports.client = require('./client')
+exports.kintone = require('./kintone')
 exports.plugin = require('./plugin')
 exports.server = require('./server')
 exports.watch = require('./watch')

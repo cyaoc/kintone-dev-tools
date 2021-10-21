@@ -1,42 +1,38 @@
 const path = require('path')
 const fs = require('fs-extra')
 const logger = require('../logger')
+const { Env } = require('../kintone')
 
 const configFile = '.devtoolsrc.js'
 
-module.exports = class Config {
+module.exports = class Config extends Env {
   constructor(dir) {
+    super(path.resolve(dir, configFile))
     this.dir = dir
-    this.file = path.resolve(this.dir, configFile)
-    if (!fs.existsSync(this.file)) {
-      const template = `module.exports = {
-    env: {
-      host: '',
-      username: '',
-      password: '',
-    },
-    map: [
-      { type: 'app', appid: 1, folder: 'xxx', upload: 'desktop', ignore: ['xxx.js'] },
-      { type: 'portal', src: ['test/xxx.js'] },
-    ]
-  }`
-      fs.outputFileSync(this.file, template)
-      logger.info('未找到配置文件，目前已重新生成，请进行配置')
-    }
   }
 
   isConfig(file) {
     return this.file === file
   }
 
-  reload() {
+  async reload() {
     delete require.cache[this.file]
-    this.load()
+    await this.load()
   }
 
-  load() {
-    const config = require(this.file)
+  async load() {
+    const config = await super.load()
     this.env = config.env
+    if (!fs.existsSync(this.file)) {
+      config.map = [
+        { type: 'portal', folder: '.', ignore: ['ignore.js'] },
+        { type: 'app', appid: 1, src: ['app.js'], upload: 'desktop' },
+      ]
+      super.save(config)
+      logger.info(
+        'The configuration file has been generated, please manually set the mapping relationship between file and app',
+      )
+    }
     this.map = new Map()
     this.ignore = new Set()
 
@@ -45,7 +41,7 @@ module.exports = class Config {
 
       const value = {}
       if (el.appid && el.appid > 0) value.appid = el.appid
-      value.upload = (el.upload ? (Array.isArray(el.upload) ? el.upload : [el.upload]) : ['mobile', 'desktop']).map(
+      value.upload = (el.upload ? (Array.isArray(el.upload) ? el.upload : [el.upload]) : ['desktop', 'mobile']).map(
         (e) => e.toUpperCase(),
       )
 
