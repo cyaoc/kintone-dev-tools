@@ -21,7 +21,7 @@ module.exports = class Config extends Env {
   }
 
   async load() {
-    const config = await super.load()
+    const config = await super.load({ save: false })
     this.env = config.env
     if (!fs.existsSync(this.file)) {
       config.map = [
@@ -37,13 +37,8 @@ module.exports = class Config extends Env {
     this.ignore = new Set()
 
     config.map.forEach((el) => {
+      const value = { appid: el.appid, upload: el.upload }
       const folder = el.folder ? (path.isAbsolute(el.folder) ? el.folder : path.resolve(this.dir, el.folder)) : this.dir
-
-      const value = {}
-      if (el.appid && el.appid > 0) value.appid = el.appid
-      value.upload = (el.upload ? (Array.isArray(el.upload) ? el.upload : [el.upload]) : ['desktop', 'mobile']).map(
-        (e) => e.toUpperCase(),
-      )
 
       if (el.src) {
         const arr = Array.isArray(el.src) ? el.src : [el.src]
