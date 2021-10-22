@@ -23,7 +23,7 @@ module.exports = class Env {
   async load(options) {
     const opts = options || { save: true }
     opts.expends = opts.expends || []
-    opts.expends = Array.isArray(options.expends) ? options.expends : [options.expends]
+    opts.expends = Array.isArray(opts.expends) ? opts.expends : [opts.expends]
     const configuration = fs.existsSync(this.file) ? require(this.file) : { env: {} }
     const questions = [
       {
