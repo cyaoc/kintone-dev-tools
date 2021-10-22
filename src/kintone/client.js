@@ -26,7 +26,7 @@ const host = (str) => {
 module.exports = class Client {
   constructor(env) {
     this.instance = axios.create({
-      baseURL: `https://${host(env.host)}`,
+      baseURL: `https://${host(env.baseurl)}`,
       timeout: 10000,
       headers: {
         'X-Cybozu-Authorization': Buffer.from(`${env.username}:${env.password}`).toString('base64'),
@@ -34,11 +34,7 @@ module.exports = class Client {
     })
   }
 
-  this(env) {
-    this(env.host, env.username, env.password)
-  }
-
-  async uploadPlugin(buff, name) {
+  async uploadPlugin(name, buff) {
     const fd = new FormData()
     fd.append('file', buff, name)
     const config = {
@@ -59,7 +55,8 @@ module.exports = class Client {
 
   async upload(files, types) {
     let list = []
-    types.forEach((key) => {
+    types.forEach((type) => {
+      const key = type.toUpperCase()
       list = list.concat(
         files.map((file) => {
           return {
@@ -92,14 +89,17 @@ module.exports = class Client {
     })
   }
 
-  async customizeLinks(urls, cover, appid) {
+  async customizeLinks(urls, options) {
+    if (urls.length === 0) {
+      logger.warn('URL not found')
+      return
+    }
+    const opt = options || {}
+    opt.upload = opt.upload || ['desktop', 'mobile']
     try {
-      if (urls.length === 0) {
-        logger.warn('URL not found')
-        return
-      }
       const arr = urls.map((url) => {
-        return { types: new Set(cover), contentUrl: url }
+        const types = Array.isArray(opt.upload) ? opt.upload : [opt.upload]
+        return { types: new Set(types.map((el) => el.toUpperCase())), contentUrl: url }
       })
       const cb = (scripts) => {
         const template = new Map()
@@ -118,19 +118,21 @@ module.exports = class Client {
         arr.forEach((url) => url.types.forEach((value) => getFileKeys(template, value).push(url.contentUrl)))
         return Array.from(template.values())
       }
-      await this.customize(cb, appid)
+      await this.customize(cb, opt.appid)
     } catch (err) {
       handleError(err)
     }
   }
 
-  async customizeFiles(files, cover, appid) {
+  async customizeFiles(files, options) {
+    if (files.length === 0) {
+      logger.warn('File not found')
+      return
+    }
+    const opt = options || {}
+    opt.upload = opt.upload || ['desktop', 'mobile']
     try {
-      if (files.length === 0) {
-        logger.warn('File not found')
-        return
-      }
-      const arr = await this.upload(files, cover)
+      const arr = await this.upload(files, Array.isArray(opt.upload) ? opt.upload : [opt.upload])
       const cb = (scripts) => {
         const template = new Map()
         scripts.forEach((file) => {
@@ -148,7 +150,7 @@ module.exports = class Client {
         arr.forEach((file) => getFileKeys(template, file.type).push(file.contentId))
         return Array.from(template.values())
       }
-      await this.customize(cb, appid)
+      await this.customize(cb, opt.appid)
     } catch (err) {
       handleError(err)
     }

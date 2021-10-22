@@ -10,6 +10,7 @@ module.exports = class Watcher {
   constructor(source) {
     this.source = source
     const dir = path.isAbsolute(source) ? source : path.resolve(process.cwd(), source)
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) throw new Error(`${dir} is not a directory`)
     this.config = new Config(dir)
     this.db = new DB(dir)
   }
@@ -29,7 +30,7 @@ module.exports = class Watcher {
           const ext = path.extname(fpath)
           const flg = fs.existsSync(fpath) ? fs.lstatSync(fpath).isFile() : true
           const ignored = this.config.ignore.has(fpath) || (flg && ext !== '.js' && ext !== '.css')
-          if (ignored) logger.info(`The file '${file}' has been ignored`)
+          if (ignored) logger.warn(`The file '${file}' has been ignored`)
           return ignored
         },
         ignoreInitial: true,
@@ -61,10 +62,10 @@ module.exports = class Watcher {
     logger.info('File monitoring service has started')
   }
 
-  async upload(file, value) {
-    if (value) {
-      logger.info(`Start uploading files to ${value.appid ? `App: ${value.appid}` : `portal`}`)
-      await this.client.customizeFiles([file], value.upload, value.appid)
+  async upload(file, options) {
+    if (options) {
+      logger.info(`Start uploading files to ${options.appid ? `App: ${options.appid}` : `portal`}`)
+      await this.client.customizeFiles([file], options)
     } else {
       logger.warn('The corresponding upload address was not found')
     }
