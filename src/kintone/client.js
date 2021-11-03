@@ -89,12 +89,12 @@ module.exports = class Client {
     })
   }
 
-  async customizeLinks(urls, options) {
+  async customizeLinks(urls, options = {}) {
     if (urls.length === 0) {
       logger.warn('URL not found')
       return
     }
-    const opt = options || {}
+    const opt = options
     opt.upload = opt.upload || ['desktop', 'mobile']
     try {
       const arr = urls.map((url) => {
@@ -124,12 +124,12 @@ module.exports = class Client {
     }
   }
 
-  async customizeFiles(files, options) {
+  async customizeFiles(files, options = {}) {
     if (files.length === 0) {
       logger.warn('File not found')
       return
     }
-    const opt = options || {}
+    const opt = options
     opt.upload = opt.upload || ['desktop', 'mobile']
     try {
       const arr = await this.upload(files, Array.isArray(opt.upload) ? opt.upload : [opt.upload])

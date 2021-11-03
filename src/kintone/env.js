@@ -20,10 +20,12 @@ module.exports = class Env {
     this.file = file
   }
 
-  async load(options) {
-    const opts = options || { save: true }
+  async load(options = {}) {
+    const opts = options
     opts.expends = opts.expends || []
     opts.expends = Array.isArray(opts.expends) ? opts.expends : [opts.expends]
+    opts.save = Object.prototype.hasOwnProperty.call(opts, 'save') ? opts.save : true
+
     const configuration = fs.existsSync(this.file) ? require(this.file) : { env: {} }
     const questions = [
       {
