@@ -1,6 +1,6 @@
 {
   "name": "kintone-dev-tools",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "development tools for kintone",
   "main": "./src/index.js",
   "bin": {
@@ -20,12 +20,12 @@
   "author": "cyao",
   "license": "MIT",
   "dependencies": {
-    "@kintone/plugin-packer": "^5.0.18",
+    "@kintone/plugin-packer": "^5.0.23",
     "application-config-path": "^0.1.0",
-    "axios": "^0.21.4",
+    "axios": "^0.24.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
-    "commander": "^8.2.0",
+    "commander": "^8.3.0",
     "cross-spawn": "^7.0.3",
     "express": "^4.17.1",
     "fast-glob": "^3.2.7",

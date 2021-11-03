@@ -21,12 +21,14 @@ module.exports = class Config extends Env {
   }
 
   async load() {
-    const config = await super.load({ save: false })
+    const config = await super.load({
+      save: false,
+    })
     this.env = config.env
     if (!fs.existsSync(this.file)) {
       config.map = [
-        { type: 'portal', folder: '.', ignore: ['ignore.js'] },
-        { type: 'app', appid: 1, src: ['app.js'], upload: 'desktop' },
+        { type: 'portal', src: ['main.js'], ignore: ['ignore.js'] },
+        { type: 'app', appid: 1, folder: 'app', upload: 'desktop' },
       ]
       super.save(config)
       logger.info(
