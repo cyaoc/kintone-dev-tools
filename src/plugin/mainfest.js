@@ -1,13 +1,9 @@
-const fs = require('fs-extra')
-
-module.exports.parse = (json, change) => {
-  const manifest = JSON.parse(fs.readFileSync(json))
-  const keys = ['desktop', 'mobile', 'config']
-  keys.forEach((key) => {
-    if (manifest[key]) {
-      Object.keys(manifest[key]).forEach((type) => {
-        if (manifest[key][type]) {
-          manifest[key][type] = Array.isArray(manifest[key][type]) ? manifest[key][type] : [manifest[key][type]]
+module.exports.parse = (bytes, change, keys = ['desktop', 'mobile', 'config'], types = ['js', 'css']) => {
+  const manifest = JSON.parse(bytes)
+  if (change)
+    keys.forEach((key) => {
+      types.forEach((type) => {
+        if (manifest[key] && manifest[key][type] && Array.isArray(manifest[key][type])) {
           for (let i = manifest[key][type].length - 1; i >= 0; i -= 1) {
             const value = change(manifest[key][type][i], type)
             if (value !== undefined) {
@@ -18,7 +14,6 @@ module.exports.parse = (json, change) => {
           }
         }
       })
-    }
-  })
+    })
   return manifest
 }
