@@ -1,6 +1,6 @@
 {
   "name": "kintone-dev-tools",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "development tools for kintone",
   "main": "./src/index.js",
   "bin": {
