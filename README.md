@@ -22,9 +22,41 @@ npx kintone-dev-tools ${command} <option>
   监听目录并自动上传 js & css 文件
   
   - 启动watch命令时会在指定的监听目录下自动生成名为.devtoolsrc.js的配置文件
+ 
   - 程序启动时，监听目录下现存的文件不会上传
+
   - .devtoolsrc.js自动会被忽略，不会上传到任何地方
+ 
   - .devtoolsrc.js改动后，程序会自动加载，无需重启程序
+
+  - devtoolsrc.js sample
+```javascript
+ module.exports = {
+  "env": {
+    "baseurl": "https://xxxxx",
+    "username": "xxxx",
+    "password": "xxxxx"
+  },
+  "map": [
+    {
+      "type": "portal",
+      "src": [
+        "main.js"
+      ],
+      "ignore": [
+        "ignore.js"
+      ]
+    },
+    {
+      "type": "app",
+      "appid": 1,
+      "folder": "app",
+      "upload": "desktop"
+    }
+  ]
+}
+```
+
   - .devtoolsrc.js文件的字段定义如下
 
 
